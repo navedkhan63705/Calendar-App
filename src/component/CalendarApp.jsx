@@ -4,8 +4,8 @@ import { useState } from "react";
 // ==================== DATA ====================
 const SAMPLE_EVENTS = [
   { id: 1, title: "Team Meeting", date: "2025-05-22", startTime: "10:00", endTime: "11:00", type: "meeting" },
-  { id: 2, title: "Project Deadline", date: "2025-05-25", startTime: "23:59", endTime: "23:59", type: "deadline" },
-   { id: 3, title: "Client Presentation", date: "2025-05-28", startTime: "14:00", endTime: "16:00", type: "presentation" },
+  { id: 2, title: "Project Deadline", date: "2025-05-24", startTime: "23:59", endTime: "23:59", type: "deadline" },
+  { id: 3, title: "Client Presentation", date: "2025-05-28", startTime: "14:00", endTime: "16:00", type: "presentation" },
   { id: 4, title: "Code Review", date: "2025-05-23", startTime: "15:30", endTime: "17:00", type: "review" },
 ];
 
@@ -19,7 +19,10 @@ const EVENT_COLORS = {
 
 // ==================== UTILITY FUNCTIONS ====================
 const formatDate = (date) => date.toISOString().split('T')[0];
-const isToday = (date) => formatDate(date) === formatDate(new Date());
+const isToday = (date) => {
+  const today = new Date(2025, 4, 24); // May 24, 2025 (month is 0-indexed)
+  return formatDate(date) === formatDate(today);
+};
 const isSameMonth = (date1, date2) => date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
 
 const formatTime = (time) => {
@@ -38,7 +41,7 @@ const calculateDuration = (startTime, endTime) => {
 // ==================== CALENDAR HEADER COMPONENT ====================
 const CalendarHeader = ({ currentDate, onPrevMonth, onNextMonth }) => {
   const monthYear = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const today = new Date(2025, 4, 24).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
@@ -112,7 +115,7 @@ const CalendarDay = ({ date, isCurrentMonth, events, onDateClick }) => {
   return (
     <div 
       onClick={() => onDateClick(date, events)}
-      className={`h-28 p-2 border border-gray-200 cursor-pointer transition-all duration-200 ${todayClass} ${monthClass} ${weekendClass} hover:shadow-md`}
+      className={`h-28 p-2 border border-gray-200 cursor-pointer transition-all duration-200 ${todayClass} ${monthClass} ${weekendClass} hover:shadow-md relative`}
     >
       <div className="font-semibold mb-2 text-lg">{dayNumber}</div>
       
@@ -355,7 +358,6 @@ const EventListItem = ({ event }) => {
             <p className="capitalize">📋 Type: {event.type}</p>
           </div>
         </div>
-        
       </div>
     </div>
   );
@@ -377,8 +379,8 @@ const EventModal = ({ selectedDate, events, onClose, onAddEvent }) => {
   const handleSaveEvent = (eventData) => {
     onAddEvent(eventData);
     setShowForm(false);
-     
   };
+  
   const handleCancelForm = () => {
     setShowForm(false);
   };
@@ -491,7 +493,7 @@ const EventLegend = () => {
 
 // ==================== MAIN CALENDAR APP ====================
 const CalendarApp = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date(2025, 4, 24)); // May 24, 2025
   const [events, setEvents] = useState(SAMPLE_EVENTS);
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -518,8 +520,6 @@ const CalendarApp = () => {
     setEvents(prevEvents => [...prevEvents, newEvent]);
     setSelectedDateEvents(prevEvents => [...prevEvents, newEvent]);
   };
-
-  
 
   // Close modal
   const handleCloseModal = () => {
