@@ -379,7 +379,6 @@ const EventModal = ({ selectedDate, events, onClose, onAddEvent }) => {
     setShowForm(false);
      
   };
-
   const handleCancelForm = () => {
     setShowForm(false);
   };
@@ -412,7 +411,6 @@ const EventModal = ({ selectedDate, events, onClose, onAddEvent }) => {
                 <EventListItem 
                   key={event.id} 
                   event={event} 
-
                 />
               ))}
             </div>
