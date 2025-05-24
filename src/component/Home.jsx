@@ -73,7 +73,7 @@ const CalendarHeader = ({ currentDate, onPrevMonth, onNextMonth }) => {
 
 // ==================== DAYS OF WEEK HEADER ====================
 const DaysOfWeekHeader = () => {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Satur"];
   
   return (
     <div className="grid grid-cols-7 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl border-b border-gray-200">
