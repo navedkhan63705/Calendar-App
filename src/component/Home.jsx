@@ -5,9 +5,8 @@ import { useState } from "react";
 const SAMPLE_EVENTS = [
   { id: 1, title: "Team Meeting", date: "2025-05-22", startTime: "10:00", endTime: "11:00", type: "meeting" },
   { id: 2, title: "Project Deadline", date: "2025-05-25", startTime: "23:59", endTime: "23:59", type: "deadline" },
-  { id: 3, title: "Lunch Break", date: "2025-05-22", startTime: "12:00", endTime: "13:00", type: "break" },
-  { id: 4, title: "Client Presentation", date: "2025-05-28", startTime: "14:00", endTime: "16:00", type: "presentation" },
-  { id: 5, title: "Code Review", date: "2025-05-23", startTime: "15:30", endTime: "17:00", type: "review" },
+   { id: 3, title: "Client Presentation", date: "2025-05-28", startTime: "14:00", endTime: "16:00", type: "presentation" },
+  { id: 4, title: "Code Review", date: "2025-05-23", startTime: "15:30", endTime: "17:00", type: "review" },
 ];
 
 const EVENT_COLORS = {
@@ -73,7 +72,7 @@ const CalendarHeader = ({ currentDate, onPrevMonth, onNextMonth }) => {
 
 // ==================== DAYS OF WEEK HEADER ====================
 const DaysOfWeekHeader = () => {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Satur"];
+  const days = ["Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"];
   
   return (
     <div className="grid grid-cols-7 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl border-b border-gray-200">
@@ -234,7 +233,7 @@ const EventForm = ({ selectedDate, eventToEdit = null, onSave, onCancel }) => {
     if (!validateForm()) return;
     
     const eventToSave = {
-      id: eventToEdit?.id || Date.now(),
+      
       title: eventData.title.trim(),
       date: formatDate(selectedDate),
       startTime: eventData.startTime,
@@ -242,7 +241,7 @@ const EventForm = ({ selectedDate, eventToEdit = null, onSave, onCancel }) => {
       type: eventData.type
     };
     
-    onSave(eventToSave, !!eventToEdit);
+    onSave(eventToSave);
   };
 
   const handleInputChange = (field, value) => {
@@ -342,7 +341,7 @@ const EventForm = ({ selectedDate, eventToEdit = null, onSave, onCancel }) => {
 };
 
 // ==================== EVENT LIST ITEM COMPONENT ====================
-const EventListItem = ({ event, onEdit, onDelete }) => {
+const EventListItem = ({ event }) => {
   const duration = calculateDuration(event.startTime, event.endTime);
   
   return (
@@ -356,33 +355,14 @@ const EventListItem = ({ event, onEdit, onDelete }) => {
             <p className="capitalize">📋 Type: {event.type}</p>
           </div>
         </div>
-        <div className="flex gap-2 ml-3">
-          <button 
-            onClick={() => onEdit(event)}
-            className="p-2 bg-black bg-opacity-20 rounded-lg hover:bg-opacity-30 transition-colors"
-            title="Edit event"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
-          <button 
-            onClick={() => onDelete(event.id)}
-            className="p-2 bg-red-500 bg-opacity-80 rounded-lg hover:bg-opacity-100 transition-colors"
-            title="Delete event"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-        </div>
+        
       </div>
     </div>
   );
 };
 
 // ==================== EVENT MODAL ====================
-const EventModal = ({ selectedDate, events, onClose, onAddEvent, onUpdateEvent, onDeleteEvent }) => {
+const EventModal = ({ selectedDate, events, onClose, onAddEvent }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
 
@@ -395,30 +375,17 @@ const EventModal = ({ selectedDate, events, onClose, onAddEvent, onUpdateEvent, 
     year: 'numeric' 
   });
 
-  const handleSaveEvent = (eventData, isEditing) => {
-    if (isEditing) {
-      onUpdateEvent(eventData);
-    } else {
-      onAddEvent(eventData);
-    }
+  const handleSaveEvent = (eventData) => {
+    onAddEvent(eventData);
     setShowForm(false);
-    setEditingEvent(null);
+     
   };
 
-  const handleEditEvent = (event) => {
-    setEditingEvent(event);
-    setShowForm(true);
-  };
-
-  const handleDeleteEvent = (eventId) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
-      onDeleteEvent(eventId);
-    }
-  };
+ 
+  
 
   const handleCancelForm = () => {
     setShowForm(false);
-    setEditingEvent(null);
   };
 
   return (
@@ -449,8 +416,7 @@ const EventModal = ({ selectedDate, events, onClose, onAddEvent, onUpdateEvent, 
                 <EventListItem 
                   key={event.id} 
                   event={event} 
-                  onEdit={handleEditEvent}
-                  onDelete={handleDeleteEvent}
+                 
                 />
               ))}
             </div>
